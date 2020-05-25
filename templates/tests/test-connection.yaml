@@ -1,15 +1,16 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: "{{ include "k8s-ui.fullname" . }}-test-connection"
-  labels:
-    {{- include "k8s-ui.labels" . | nindent 4 }}
+  name: "{{ .Release.Name }}-test-connection"
+  namespace: kubernetes-dashboard
   annotations:
     "helm.sh/hook": test-success
+  labels:
+        {{- include "k8s-ui.labels" . | nindent 4 }}
 spec:
   containers:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "k8s-ui.fullname" . }}:{{ .Values.service.port }}']
+      args: ['dashboard-metrics-scraper:8000']
   restartPolicy: Never
